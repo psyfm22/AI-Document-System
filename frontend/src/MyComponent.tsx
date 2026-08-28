@@ -2,15 +2,28 @@ import React, { useState } from "react";
 
 function MyComponent() {
   const [question, setQuestion] = useState("");
+  const [file, setFile] = useState(null);
 
-  function handleQuestionChange(event) {
-    setQuestion(event.target.value);
+  function handleFileChange(e) {
+    setFile(e.target.files[0]);
+  }
+
+  function handleSubmit() {
+    if (file) {
+      console.log("File added");
+      console.log(file);
+    }
+  }
+
+  function handleQuestionChange(e) {
+    setQuestion(e.target.value);
   }
 
   return (
     <div>
       <h1>AI Document Observer</h1>
-      <button>Upload Document</button>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleSubmit}>Submit Document</button>
 
       <br></br>
       <br></br>
