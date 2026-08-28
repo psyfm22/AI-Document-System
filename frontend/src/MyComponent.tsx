@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 function MyComponent() {
   const [question, setQuestion] = useState("");
   const [file, setFile] = useState(null);
+  const [answer, setAnswer] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:8000")
@@ -18,13 +19,32 @@ function MyComponent() {
 
   function handleSubmit() {
     if (file) {
-      console.log("File added");
-      console.log(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      fetch("http://localhost:8000/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        .catch((err) => console.error(err));
     }
   }
 
   function handleQuestionChange(e) {
     setQuestion(e.target.value);
+  }
+
+  function handleAskQuestion() {
+    console.log("In handle Question");
+    fetch("http://localhost:8000/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: question }),
+    })
+      .then((res) => res.json())
+      .then((data) => setAnswer(data.answer))
+      .catch((err) => setAnswer("error: could not reach backend"));
   }
 
   return (
@@ -41,7 +61,8 @@ function MyComponent() {
         placeholder="Enter new task..."
         value={question}
       ></input>
-      <button>Ask Question</button>
+      <button onClick={handleAskQuestion}>Ask Question</button>
+      <p>{answer}</p>
     </div>
   );
 }
