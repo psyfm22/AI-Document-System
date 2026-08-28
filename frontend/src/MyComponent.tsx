@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function MyComponent() {
   const [question, setQuestion] = useState("");
   const [file, setFile] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8000")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => console.log(data));
+  }, []);
 
   function handleFileChange(e) {
     setFile(e.target.files[0]);
